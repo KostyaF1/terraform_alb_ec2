@@ -1,6 +1,8 @@
+# AWS Account creds.
 variable "access_key" {}
 
 variable "secret_key" {}
+
 
 variable "tag_name" {
   description = "Tag name"
@@ -72,4 +74,10 @@ variable "template_path" {
   description = "Local path of terraform templates"
   type = "string"
   default = "/home/kostiantyn/DevOps/chi_intern/task9/templates/"
+}
+
+variable "key_path" {
+  description = "Path to private SSH key on local machine"
+  type = "string"
+  default = "/home/kostiantyn/.ssh/"
 }
