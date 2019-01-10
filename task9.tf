@@ -18,36 +18,8 @@ resource "aws_instance" "task9_instance" {
   tags = {
     Name = "${var.tag_name}-ec2"
   }
+  depends_on = ["aws_s3_bucket_object.html_object"]
 }
-/*
-resource "null_resource" "cluster" {
-  #depends_on = ["aws_iam_instance_profile.task9_ec2_profile"]
-  count = 2
-  connection {
-    user = "ubuntu"
-    private_key = "${file("${var.ssh_key}")}"
-    host = "${element(aws_instance.task9_instance.*.public_ip, count.index)}"
-  }
-
-  provisioner "file" {
-    source = "${var.file_path}${var.conf_file_name}"
-    destination = "${var.remote_conf_file_path_home}${var.conf_file_name}"
-  }
-
-  provisioner "remote-exec" {
-    # Bootstrap script called with private_ip of each node in the clutser
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get install -y nginx",
-      "sudo rm /etc/nginx/sites-enabled/default",
-      "sudo mv ${var.remote_conf_file_path_home}${var.conf_file_name} ${var.remote_conf_file_path_nginx}${var.conf_file_name}",
-      "sudo systemctl restart nginx",
-      "aws s3 cp s3://s3-website-task9.ml/index.html /home/ubuntu/${ var.static_file_name }"
-    ]
-  }
-*/
-
-
 
 resource "aws_vpc" "task9_vpc" {
   cidr_block       = "10.192.0.0/16"
@@ -161,15 +133,6 @@ resource "aws_lb" "task9-lb" {
   name               = "task9-lb"
   load_balancer_type = "application"
 
-/*
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 3
-    target              = "HTTP:8080/"
-    interval            = 30
-  }
-  */
   subnets = ["${data.aws_subnet_ids.task9_subnets.ids}"]
   security_groups = ["${aws_security_group.task9_lb_sg.id}"]
 
@@ -195,13 +158,6 @@ resource "aws_lb_target_group" "task9-lb-tg" {
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.task9_vpc.id}"
 }
-/*
-resource "aws_elb_attachment" "task9-elb_attache" {
-  count    = 2
-  elb      = "${aws_elb.task9-elb.id}"
-  instance = "${data.aws_instances.task9_instances.ids[count.index]}"
-}
-*/
 
 resource "aws_lb_target_group_attachment" "task9_lb_target_group_attachment" {
   count = 2
@@ -253,15 +209,6 @@ resource "aws_s3_bucket_object" "html_object" {
   etag   = "${md5(file("/${var.file_path}${var.static_file_name}"))}"
 }
 
-/*
-resource "aws_s3_bucket_object" "conf_object" {
-  bucket = "${aws_s3_bucket.task9_s3.bucket}"
-  key    = "${var.conf_file_name}"
-  source = "${var.file_path}${var.conf_file_name}"
-  etag   = "${md5(file("/${var.file_path}${var.conf_file_name}"))}"
-}
-*/
-
 resource "aws_route53_zone" "task9_zone" {
   name = "${var.domain_name}"
 
@@ -281,7 +228,3 @@ resource "aws_route53_record" "dev-ns" {
   }
 }
 
-
-output "dns_name" {
-  value = "${aws_lb.task9-lb.dns_name}"
-}

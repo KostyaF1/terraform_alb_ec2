@@ -41,13 +41,13 @@ variable "cidr" {
 variable "file_path" {
   description = "Path to file on local machine"
   type = "string"
-  default = "/home/kostiantyn/DevOps/chi_intern/task9/"
+  default = "/home/kostiantyn/DevOps/chi_intern/task9/static/"
 }
 
-variable "remote_conf_file_path_home" {
+variable "remote_static_file_path" {
   description = "Path to file on remote machine"
   type = "string"
-  default = "/tmp/"
+  default = "/home/ubuntu/"
 }
 
 variable "remote_conf_file_path_nginx" {
@@ -68,8 +68,8 @@ variable "conf_file_name" {
   default = "task9.ml.conf"
 }
 
-variable "ssh_key" {
-  description = "path to SSH key on local machine"
+variable "template_path" {
+  description = "Local path of terraform templates"
   type = "string"
-  default = "/home/kostiantyn/.ssh/id_rsa"
+  default = "/home/kostiantyn/DevOps/chi_intern/task9/templates/"
 }
