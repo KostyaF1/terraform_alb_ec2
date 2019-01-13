@@ -7,6 +7,7 @@ data "template_file" "init" {
     conf_file_name = "${var.conf_file_name}"
     remote_conf_file_path_nginx = "${var.remote_conf_file_path_nginx}"
     remote_static_file_path = "${var.remote_static_file_path}"
+    remote_tmp_path_nginx = "${var.remote_tmp_path_nginx}"
   }
 }
 
@@ -47,4 +48,11 @@ data "template_file" "task9_s3_policy" {
 data "template_file" "task9_ec2_role" {
   template = "${file("${var.template_path}task9_ec2_role.json.tpl")}"
 
+}
+
+data "template_file" "task9_nginx_conf" {
+  template = "${file("${var.template_path}task9_ml.conf.tpl")}"
+  vars {
+    remote_static_file_path = "${var.remote_static_file_path}"
+  }
 }

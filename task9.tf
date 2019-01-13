@@ -214,9 +214,18 @@ resource "null_resource" "task9_cluster" {
 
   }
 
+  provisioner "file" {
+    destination = "${ var.remote_tmp_path_nginx }${var.conf_file_name}"
+    source = "${var.conf_file_path}${var.conf_file_name}"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "aws s3 cp s3://${aws_s3_bucket.task9_s3.bucket}/${var.static_file_name} ${var.remote_static_file_path}${var.static_file_name}",
+      "sudo rm ${ var.remote_conf_file_path_nginx }default",
+      "sudo mv ${ var.remote_tmp_path_nginx }${var.conf_file_name} ${ var.remote_conf_file_path_nginx }${var.conf_file_name}",
+      "sudo systemctl restart nginx",
+      "sleep 10",
+      "aws s3 cp s3://${aws_s3_bucket.task9_s3.bucket}/${var.static_file_name} ${var.remote_static_file_path}${var.static_file_name}"
     ]
   }
   depends_on = ["aws_iam_role_policy_attachment.task9_policy_att"]

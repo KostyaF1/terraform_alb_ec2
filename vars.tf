@@ -58,6 +58,12 @@ variable "remote_conf_file_path_nginx" {
   default = "/etc/nginx/sites-enabled/"
 }
 
+variable "remote_tmp_path_nginx" {
+  description = "Path to file on remote machine"
+  type = "string"
+  default = "/tmp/"
+}
+
 variable "static_file_name" {
   description = "Local html file that need to upload to s3"
   type = "string"
@@ -68,6 +74,12 @@ variable "conf_file_name" {
   description = "Local Configuration file for nginx server"
   type = "string"
   default = "task9.ml.conf"
+}
+
+variable "conf_file_path" {
+  description = "Local Configuration path to nginx conf"
+  type = "string"
+  default = "/home/kostiantyn/DevOps/chi_intern/task9/conf/"
 }
 
 variable "template_path" {

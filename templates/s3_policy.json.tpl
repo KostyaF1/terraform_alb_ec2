@@ -4,11 +4,7 @@
         {
             "Sid": "IPAllow",
             "Effect": "Allow",
-            "Principal": {
-                            "Service": [
-                                "ec2.amazonaws.com"
-                            ]
-                        },
+            "Principal": "*",
             "Action": [
                 "s3:GetObject"
                 ],
